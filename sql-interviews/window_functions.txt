@@ -1,0 +1,134 @@
+https://datalemur.com/sql-interview-questions  (for SQL interview questions)
+
+Q # https://medium.com/@sg9997688903/fill-missing-client-data-accenture-sql-interview-question-datalemur-f369c61100e0
+
+Solution:
+
+
+WITH 
+category_group AS (
+  SELECT product_id, category, name, 
+  	COUNT(category) OVER (ORDER BY product_id) AS category_grp 
+  FROM products
+ )
+ 
+ SELECT product_id, 
+ 	FIRST_VALUE(category) OVER(
+      PARTITION BY category_grp ORDER BY product_id
+    ) AS category,
+    name
+ FROM category_group
+
+ 
+Q # https://thedataway.in/2023/03/27/booking-referral-source-airbnb-sql-interview-question_datalemur/
+
+Solution:
+
+WITH 
+bookingstable AS (
+    select b.booking_id as booking_id, b.user_id,b.booking_date,channel,
+        ROW_NUMBER() OVER (PARTITION BY b.user_id ORDER BY b.booking_date) as b_count
+    from bookings as b
+    join booking_attribution as ba 
+    on ba.booking_id=b.booking_id
+)
+
+select channel, 
+    round(100.0 * count(booking_id) / (select count(booking_id) from bookingstable where b_count = 1), 0) as first_booking_pct
+from bookingstable
+where b_count = 1
+group by channel
+limit 1
+
+Q # https://medium.com/@mp5718/2nd-ride-delay-on-uber-20d5d9d1133
+
+Solution: 
+
+WITH 
+moment_users AS (
+    SELECT DISTINCT users.user_id
+    FROM users
+    JOIN rides
+    ON users.user_id = rides.user_id
+    AND users.registration_date = rides.ride_date
+),
+
+// this can also be done by join ride and users table and subtract registeration_date from ride date because
+// join will ensure that only those users will come who have same registeration_date and first ride date
+
+rides_cte AS (
+    SELECT 
+        rides.user_id, 
+        rides.ride_date, 
+        ROW_NUMBER() OVER (
+            PARTITION BY user_id ORDER BY ride_date
+        ) AS ride_no,
+        LAG(rides.ride_date) OVER (
+            PARTITION BY user_id ORDER BY ride_date
+        ) AS lag_ride_date,
+    FROM moment_users AS mu 
+    LEFT JOIN rides 
+    ON mu.user_id = rides.user_id
+)
+
+SELECT ROUND(AVG(ride_date - lag_ride_date), 2) AS average_delay 
+FROM rides_cte
+WHERE ride_no = 2
+;
+
+Q # https://medium.com/@mp5718/google-maps-flagged-ugc-99b753f33c4e
+
+Solution: https://medium.com/@mp5718/google-maps-flagged-ugc-99b753f33c4e
+
+
+Q # https://medium.com/@mp5718/user-session-activity-on-twitter-42cef303db94
+
+Solution: https://medium.com/@mp5718/user-session-activity-on-twitter-42cef303db94
+
+Q # https://i-sammy.medium.com/first-transaction-sql-question-asked-by-etsy-c5f56d6983a0
+
+Solution: 
+
+SELECT count(user_id) 
+FROM (
+    SELECT user_id, spend, transaction_date,
+        ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY transaction_date) AS trans_rank
+    FROM user_transactions
+)
+WHERE trans_rank = 1 AND spend >= 50;
+
+
+Q # https://i-sammy.medium.com/purchasing-activity-by-product-type-amazon-asked-sql-question-ef91e74743f3
+
+SOlution:
+
+SELECT order_date, product_type,
+    SUM(quantity) OVER (PARTITION BY product_type ORDER BY order_date) AS cum_purchased
+FROM total_trans;
+
+
+Q # https://medium.com/@Mr.DataScientist/daily-sql-day-3-9a36a3952005
+https://datalemur.com/questions/compensation-outliers
+
+Solution: Very important point to understand is that when we only use PARTITION BY, it considers the full partition for every row,
+however if we use ORDER BY then for each row, it considers the n preceding and current row as window 
+which results in cumulative aggregations. 
+
+WITH TitleAverages AS (
+  SELECT
+    employee_id,
+    salary,
+    title,
+    AVG(salary) OVER (PARTITION BY title) AS average_salary
+  FROM employees
+)
+
+SELECT
+  employee_id,
+  salary,
+  CASE
+    WHEN salary > 2 * average_salary THEN 'Overpaid'
+    WHEN salary < 0.5 * average_salary THEN 'Underpaid'
+    ELSE 'Neither Overpaid nor Underpaid'
+  END AS compensation_status
+FROM TitleAverages;
