@@ -1,6 +1,15 @@
 https://datalemur.com/sql-interview-questions  (for SQL interview questions)
 https://sqliteonline.com/  (Online SQL IDE)
 
+
+PARTITION BY vs ORDER BY 
+
+In window function, when we only use PARTITION BY, for every row the full partition is considered and 
+aggregation is applied on full partition. But if we use PARTITION BY with ORDER BY, then by default, for every row, 
+aggregation is applied on a sliding window (from first row to current row) instead of full partition which gives us 
+a kind of cumulative aggregation. 
+
+
 Q # https://medium.com/@sg9997688903/fill-missing-client-data-accenture-sql-interview-question-datalemur-f369c61100e0
 
 Solution:
