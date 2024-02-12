@@ -56,7 +56,7 @@ moment_users AS (
 // this can also be done by join ride and users table and subtract registeration_date from ride date because
 // join will ensure that only those users will come who have same registeration_date and first ride date
 
-rides_cte AS (
+rides_lag AS (
     SELECT 
         rides.user_id, 
         rides.ride_date, 
@@ -72,7 +72,7 @@ rides_cte AS (
 )
 
 SELECT ROUND(AVG(ride_date - lag_ride_date), 2) AS average_delay 
-FROM rides_cte
+FROM rides_lag
 WHERE ride_no = 2
 ;
 
@@ -132,3 +132,85 @@ SELECT
     ELSE 'Neither Overpaid nor Underpaid'
   END AS compensation_status
 FROM TitleAverages;
+
+
+
+
+
+Q # https://www.youtube.com/watch?v=twogJMRbhLw&ab_channel=DataEngineeringStudies
+
+Write a query to find the user ids of everyone who filed their taxes with any version of Turboxtax three or more years in 
+a row. Display the output in ascending order of user_ids.
+
+Assumption:
+- As reflected in the table, a user can only file taxes once a year using one product.
+
+Table: filed_taxes
+
+Column Name | Type 
+filing_id | integer
+user_id | integer
+filing_date | datetime 
+product | varchar
+
+Solution:
+
+WITH
+tax_year AS (
+    SELECT *, EXTRACT(YEAR FRM filing_date) AS filing_year 
+    FROM filed_taxes
+    WHERE LOWER(product) LIKE "turboxtax%"
+),
+
+tax AS (
+    SELECT 
+        user_id,
+        LAG(filing_year) OVER (PARTITION BY user_id ORDER BY filing_year) AS prev_year,
+        filing_year AS current_year,
+        LEAD(filing_year) OVER (PARTITION BY user_id ORDER BY filing_year) AS next_year
+    FROM tax_year
+)
+
+SELECT DISTINCT user_id
+FROM tax
+WHERE next_year - prev_year = 2
+ORDER BY user_id
+;
+
+
+Q # https://www.youtube.com/watch?v=q75f5EE0O3s&ab_channel=SolvingwithAkoyo
+
+Solution:
+
+WITH 
+events AS (
+    SELECT *,
+        EXTRACT(WEEK FROM event_date) AS event_week
+    FROM marketing_touches
+),
+
+event_week AS (
+    SELECT
+        contact_id,
+        LAG(event_week) OVER (PARTITION BY contact_id ORDER BY event_date) AS prev_week,
+        LEAD(event_week) OVER (PARTITION BY contact_id ORDER BY event_date) AS next_week,
+        event_week AS current_week
+    FROM events
+)
+
+consecutive_contacts AS (
+    SELECT DISTINCT contact_id 
+    FROM event_week
+    WHERE next_week - prev_week = 2
+)
+
+SELECT t0.contact_id AS contact_id
+FROM (
+    SELECT DISTINCT contact_id
+    FROM events
+    WHERE event_type = "trial_request"
+) t0 
+INNER JOIN 
+consecutive_contacts cc 
+ON t0.contact_id = cc.contact_id
+
