@@ -1,0 +1,20 @@
+Data Modeling has 3 layers
+
+Data modeling is an essential part of data engineering, and it consists of three layers: conceptual, logical, and physical. 
+
+1- Conceptual Data Modeling
+Represent the organization structure at a very high level, showing the key entities and relationships but not delving into details.
+
+2- Logical Data Modeling
+It is a bridge between Conceptual and Physical data Modeling. Includes entity names, relationships and attributes but not specific tecnical details like data types.
+
+3- Physical Data Modeling
+Includes detailed information such as table names, column names, data types and constraints. Specifies Primary and Foreign keys, indexes,
+triggers and other database specific features. Optimized for performance and storage efficiency.
+
+Normalization -> a process that organizes data attributes efficiently and aiming to reduce the duplication of data and increase the data integrity.
+
+
+Normalization vs Denormalization
+https://seattledataguy.substack.com/p/normalization-vs-denormalization
+
