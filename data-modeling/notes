@@ -18,3 +18,132 @@ Normalization -> a process that organizes data attributes efficiently and aiming
 Normalization vs Denormalization
 https://seattledataguy.substack.com/p/normalization-vs-denormalization
 
+1NF -> Every column should have atomic values (which could not be further divided or sub-divided). For example, if a customer has 
+        multiple phone numbers and we save it in same column then it is not atomic.
+       There should be no-repeating groups. For example, a table has student column and multiple columns for course which is violation
+       of 1NF as multiple course columns is a repeating group for course column.
+
+2NF -> Must be in 1NF. Non-prime attribute should be fully dependant on primary key and there should not be any partial dependency.
+        For example, if a non-primary column can uniquely identified from a partial primary key (a subset of primary key), then it
+        is partial dependency and violation of 2NF.
+
+3NF -> Must be in 2NF. There should be no transitive dependency between non-prime attributes. If A->B and B->C are two FDs 
+        then A->C is called transitive dependency which is violation of 3NF.
+
+
+Idempotent Pipeline -> For same input dataset, your pipeline should produce same output dataset regardless of what day, what hour or how
+many times it ran. Backfiling of data should produce the consistent results regardless of execution time or frequency.
+
+What can make a pipeline not idempotent
+
+- Insert INTO without TRUNCATE (this will duplicate the data) so either use MERGE or INSERT OVERWRITE to avoid this issue.
+- Using start_date > without corrosponding end_date < .For example, let's say our source data based on daily snapshot and 
+start_date=2024-02-01 and we run pipeline on 2024-02-08 and now we have 7 day window but if we run same pipeline after 1 week (2024-02-15),
+now our window will be 2 weeks and results will be different. To keep idempotent, fix window size.
+- Not using a full set of partition (pipeline might run where there is no/partial dependency). Solution is to make tight dependency on source
+partitions which means our pipeline will only run when source are ready/fully executed.
+- Relying on the latest partition of data. In case source dataset failed at some day, then you will get latest partition as last successfully executed partition not the actual latest partition that you were expecting. Try to replace latest with some datetime logic as per your requirments.
+
+Pains of not having idempotent pipelines
+
+- Backfiling causes inconsistencies between the old and restated data.
+- Very hard to troubleshoot bugs
+- Silent failures
+- Unit testing cannot replicate the production behavior
+
+If your data is changing slowly like after 3 or 6 months and dataset is very big then we can think of modeling SCD but if data is changing
+very quickly then daily snapshot is as it will make your pipeline idempotent.
+
+SCD Types:
+
+Type 0 -> Actually dimensions are not changing, e.g. birth_date. This type is idempotent.
+Type 1 -> Only latest values of dimensions, we don't care about historical data which is not good for analytical and ML data. This 
+          type is not idempotent.
+Type 2 -> Track every change of dimension with current_date and end_date, initially end_date will have NULL or some future value
+          and is_current column to track latest value of dimension. When dimension value change, both current_date and previous 
+          value of end_date will be same. This SCD type is idempotent.
+Type 3 -> Only Track original and latest value. 1 row per dimension but you lose history in between original and current. This is 
+          not idempotent.
+
+
+SCD implementation query (https://www.dataexpert.io/query):
+
+-> Type 2 SCD
+
+CREATE TABLE abdurrehman245.nba_players_scd AS 
+
+WITH first_season AS (
+  SELECT player_name, MIN(season) AS first_season
+  FROM bootcamp.nba_player_seasons
+  GROUP BY player_name
+),
+
+all_data AS (
+  SELECT np.player_name, exploded_season AS season,
+    MAX(np.season = exploded_season) AS is_active
+  FROM bootcamp.nba_player_seasons np
+  INNER JOIN first_season fs 
+  ON np.player_name = fs.player_name
+  CROSS JOIN UNNEST(sequence(fs.first_season, 2021)) AS t(exploded_season)
+  GROUP BY np.player_name, exploded_season
+  ORDER BY exploded_season
+),
+
+change_identified AS (
+  SELECT *,
+    LAG(is_active, 1) OVER (
+      PARTITION BY player_name ORDER BY season
+    ) AS is_active_last_season,
+    CASE WHEN is_active = LAG(is_active, 1) OVER (
+      PARTITION BY player_name ORDER BY season
+    ) THEN 0 ELSE 1 END AS did_change
+  FROM all_data
+),
+
+identified AS (
+  SELECT *, SUM(did_change) OVER (
+      PARTITION BY player_name ORDER BY season
+    ) AS streak_identifier
+  FROM change_identified
+)
+
+SELECT 
+  player_name, is_active,
+  MIN(season) AS start_season,
+  MAX(season) AS end_season,
+  MAX(season = 2021) AS is_current
+FROM identified
+GROUP BY player_name, is_active, streak_identifier
+
+
+-> Type 1 SCD
+
+SELECT player_name, is_active
+FROM abdurrehman245.nba_players_scd 
+WHERE is_current AND
+player_name = 'Michael Jordan'
+
+-> Type 3 SCD
+
+WITH f AS (
+  SELECT 
+    player_name, 
+    is_active, 
+    start_season, 
+    end_season,
+    ROW_NUMBER() OVER (
+      PARTITION BY player_name ORDER BY start_season
+    ) AS num
+  FROM abdurrehman245.nba_players_scd 
+)
+
+SELECT 
+  player_name,
+  MAX(CASE WHEN num = 1 THEN start_season END) AS original_start,
+  MAX(CASE WHEN num = 1 THEN is_active END) AS original_is_active,
+  MAX(CASE WHEN end_season = 2021 THEN start_season END) AS current_start,
+  MAX(CASE WHEN end_season = 2021 THEN is_active END) AS current_is_active
+FROM f
+GROUP BY player_name
+
+
