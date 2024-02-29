@@ -147,3 +147,64 @@ FROM f
 GROUP BY player_name
 
 
+Data Warehousing Chapter 1 Summary
+
+- Both 3NF and dimensional models canbe represented in ERDs because both consist of joined relational tables; the key
+difference between 3NF and dimensional models is the degree of normalization.
+
+- Dimensional models implemented in relational database management systems are referred to as star schemas because of 
+their resemblance to a star-like structure.Dimensional models implemented in multidimensional database environments are
+referred to as online analytical processing (OLAP) cubes.
+
+- OLAP cubes gracefully support slowly changing dimension type 2 changes, but cubes often need to be reprocessed partially or 
+totally whenever data is overwritten using alternative slowly changing dimension techniques.
+
+- Designer should make every effort to put textual data into Dimensions instead of Fact where they can be correlated more 
+effectively with the other textual dimension attributes and consume much less space.
+
+- All fact tables have two or more foreign keys that connect to the dimension tables primary keys. The fact table generally 
+has its own primary key composed of a subset of the foreign keys. This key is often called a composite key. Every table 
+that has a composite key is a fact table. Fact tables express many-to-many relationships. All others are dimension tables.
+
+- Dimension tables often have many columns or attributes. It is not uncommon for a dimension table to have 50 to 100 attributes;
+although, some dimension tables naturally have only a handful of attributes. Dimension tables tend to have fewer rows than
+ fact tables, but can be wide with many large text columns. Each dimension is defined by a single primary key, which serves 
+as the basis for referential integrity with any given fact table to which it is joined.
+
+- You often make the decision by asking whether the column is a measurement that takes on lots of values and participates 
+in calculations (making it a fact) or is a discretely valued description that is more or less constant and participates 
+in constraints and row labels (making it a dimensional attribute)
+
+- The designer’s dilemma of whether a numeric quantity is a fact or a dimension attribute is rarely a difficult decision. 
+Continuously valued numeric observations are almost always facts; discrete numeric observations drawn from a
+small list are almost always dimension attributes.
+
+- The most finely grained data must be available in the presentation area (after ETL Layer) so that users can ask the most 
+precise questions possible. Because users’ requirements are unpredictable and constantly changing, you must provide access
+to the exquisite details so they can roll up to address the questions of the moment.
+
+
+Dimension Data Modeling Tutorials
+
+- https://www.youtube.com/watch?v=7HyGM3Iw0Kc&ab_channel=BIwithMina
+
+
+Data Lake, Apache Iceberg and Parquet Compression
+- Data Lake is a set of files on someone elses computer.
+- Compression is a way of reducing the size of data. There are two types of Compression
+  - Lossy -> Reduces data size at the expense of some data correctness. Common with video, image and audio processing.
+  - Lossless -> Reduces data size at no expense to data correctness. Common with tabular data processing and encoding.
+- Data Engineer mostly focus on Lossless compression and one Lossless compression technique that you really need to know in the 
+world of Data Lake is `Run-Length Encoding`.
+- Run-Length Encoding
+  - Run-length encoding (RLE) is a simple form of data compression where consecutive elements of the dataset that are 
+    identical are replaced with a single value and the count of occurrences. Sorting by lowest cardinality means 
+    grouping similar elements together, which increases the likelihood of having longer runs of identical elements.
+  - Sorting matters a lot when doing compression using Run-Length encoding. Your data needs to be sorted by lowest cardinality
+    to highest cardinality.
+  
+- Why should we use Parquet file format
+  - Its columnar (if you don't select all the columns, you don't read all the data)
+  - It supports run-length encoding compression
+  - Its widely used in industry
+
