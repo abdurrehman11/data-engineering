@@ -1,0 +1,63 @@
+
+Docker is a platform for developing, shipping, and running applications in containers. Containers are lightweight, 
+portable, and self-sufficient units that can run applications and their dependencies isolated from the 
+underlying system. Docker provides a set of tools and a platform to automate the deployment and scaling 
+of applications within these containers.
+
+Now a days docker is being used everywhere whether its data engineering, machine learning engineering or software
+engineering and that's why optimizing and securing docker images are very important for large scale applications.
+
+We can optimize and secure docker images using two techniques,
+1- Multi-Stage build
+2- Distroless Docker image
+
+What is Multi-Stage build and why use it?
+Multi-stage builds in Docker allow you to use multiple FROM statements in a Dockerfile, resulting in a 
+more efficient and smaller final image. This feature is particularly useful when you need build tools 
+and dependencies during the build phase but don't want them in the final production image. It helps 
+reduce the size of the Docker image and ensures that only necessary artifacts are included.
+
+What is Distroless Docker image and why use it?
+Very minimalistic image that will have only runtime environment. For exmaple, if we have python distroless image,
+it will only have python runtime environment which means basic shell commands will not even execute. Also distroless 
+image will give you highest level of security and will be very less vulnerable.
+
+I tried multi-stage and Distroless Python image with fastapi dependencies. It reduced the size image 
+from 1.01GB to 81.47MB which is almost 13X reduction in size and this small image is highly secure as well.
+
+Attached are the snapshots that you can run on your machine to optimize and secure the image and compare them.
+
+Docker Networking
+
+In Docker, networking is very important both from communication and security perspective. There are 3 types of
+network mode in Docker,
+1- Bridge (default)
+2- Host 
+3- Overaly 
+
+Bridge 
+This is the default network attached to container when we launch our container. In this network mode, each container 
+gets its own network namespace, providing isolation from other containrs however containers can 
+communicate with host and each other through virtual network that docker created. Containers can be exposed 
+externally using port mapping (e.g., -p 8080:80).
+
+Host
+Containers share the network namespace with the host machine. Containers directly use the host's network stack, 
+sharing the same IP address space. Containers can bind to host ports without specifying port mapping.
+
+Overlay
+This network facilitate communication between containers running on multiple hosts.
+
+
+Let focus on more bridge network mode which we can utilize in many use cases and understand how two scenarios
+1- Containers should communicate with each other
+2- Containers should communicate with each other
+
+In the first scenario, we can create a single bridge network and attach it to all the containers that should communicate
+with each other.
+
+In the second scenario, we can create a bridge network for every container and attach a dedicate network to each container
+and in this way they containers will be isolated from each other. 
+
+In first scenario, you ping a one container form another container because same network is attached but in second scenario,
+it will not work due to isolation.
