@@ -1,0 +1,22 @@
+View vs CTE 
+
+A view is a virtual table that represents the result set of a SELECT query. It does not store the data itself; 
+instead, it stores the query used to generate the result set. When you query a view, the database engine dynamically 
+executes the underlying query and returns the result.
+
+CTEs are beneficial when you need to break down a complex query into simpler, more readable, and maintainable parts.
+They are suitable for use in a single query and are not stored persistently in the database.
+
+Temporary table is automatically gets deleted when we close the session which means we dont have to cleaning the data
+which is really great.
+
+Staging tables are kind of normal database tables but they have very short retention period like 5 or 7 days and just 
+created to speed up the ETL pipeline. We can use materialized view to create Staging tables and then we will be able 
+to access data in another session even if we close the current session. We can refresh the materialized view to get 
+the latest data but if someone else is accessing the materialized view at that time, it will get blocked and resolve this,
+we should create an index on materialized view and then refresh the materialized view concurrently. Now, if we try to 
+access the materialized view while it is refreshing, we will be able to access the data but it will be old and also refresh
+process will continue without getting blocked. However, materialized views are not good in the context that they will perform 
+the computation on entire window all the time so a better option is to maintain an incremental table.
+
+

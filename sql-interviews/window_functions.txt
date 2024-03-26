@@ -20,14 +20,14 @@ category_group AS (
   SELECT product_id, category, name, 
   	COUNT(category) OVER (ORDER BY product_id) AS category_grp 
   FROM products
- )
+)
  
- SELECT product_id, 
+SELECT product_id, 
  	FIRST_VALUE(category) OVER(
       PARTITION BY category_grp ORDER BY product_id
     ) AS category,
     name
- FROM category_group
+FROM category_group
 
  
 Q # https://thedataway.in/2023/03/27/booking-referral-source-airbnb-sql-interview-question_datalemur/

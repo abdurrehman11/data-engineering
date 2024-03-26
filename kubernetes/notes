@@ -1,0 +1,53 @@
+Kubernete is used to orchestrate docker containers which means management of containers.
+
+What Docker not provide that Kubernetes does?
+- Auto Scaling
+- Auto Healing
+- Load Balancer
+- Enterprise Level Support
+- No Single Host Issue as Kubernetes is a cluster of hosts (master/node architecture)
+
+Docker vs Kubernetes (Architecture)
+- Pod is the smallest unit in Kubernetes while container in Docker
+- Docker is single host while Kubernets has cluster architecture (master/worker nodes)
+- In Docker, Docker Engine runs the container and in Kubernetes, kubelet runs the pods on worker nodes
+- When we apply any operation to kubernetes, it first go to master node(control plane) and then applied on worker nodes(Data Plane)
+
+- In Kubernetes worker node (Data Plane), there are 3 components. 
+    1- Kubeproxy
+    2- Kubelet
+    3- Container Runtime
+
+1- Kubeproxy is responsible for pods networking (like we have bridge and other network modes in docker) and load balancing.
+2- Kubelet is responsible for creation of Pods and ensure that Pod is always running and if its not running, 
+    Kubelet will inform some ?? in master node to restart this pod.
+3- When we run any application in container, we need its runtime. For example, to run java application in 
+    container, we need Java Runtime and similarly, to run container in Docker, we have Dockershim as container runtime
+    and in Kubernetes, we have multiple options for pod runtime like containerd, container runtime etc.
+
+- In Kubernetes master node (Control Plane), there are 3 components. 
+    1- API Server
+    2- Scheduler
+    3- etcd
+    4- Controller Manager
+    5- Cloud Controller Manager (CCM)
+
+1- API server is responsible to expose Kubernetes cluster to the outside world so multiple users can access 
+and request operations like creation, replicaiton, deletion etc of Pod to the Kubernetes cluster. For example, if
+user wants to create a pod, user will send request to API server and API server will determine that if Node1 is free,
+then create Pod on node1.
+
+2- Scheduler is responsible to schedule the pods on worker nodes. It will take worker node information from API server
+and then schedule pod on that worker node.
+
+3- etcd is a key-value store and entire kubernetes cluster information is stored as objects or key-value pairs in etcd.
+
+4- Controller Manager is responsible for managing of kubernetes controllers. For example, like for auto scaling 
+    of pods, we have replica set controller in Kubernetes that maintains information about pods and 
+    if we want to increase or decrease the number of pods, this controller will handle this. Also, it will 
+    ensure the specified number of replicas are always running.
+
+5- CCM is responsible for ruuning Kubernetes cluster on cloud services. It provides controller to run Kubernetes
+    on cloud services like EKS or AKS. If we are running Kubernetes cluster on-premises, this component is 
+    not at all needed.
+

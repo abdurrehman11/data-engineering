@@ -29,8 +29,8 @@ Attached are the snapshots that you can run on your machine to optimize and secu
 
 Docker Networking
 
-In Docker, networking is very important both from communication and security perspective. There are 3 types of
-network mode in Docker,
+In Docker, networking is very important both from container communication and security perspective. 
+There are 3 types of network mode in Docker,
 1- Bridge (default)
 2- Host 
 3- Overaly 
