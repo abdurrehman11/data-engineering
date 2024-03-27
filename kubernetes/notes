@@ -1,3 +1,6 @@
+- https://www.youtube.com/playlist?list=PLdpzxOOAlwvJdsW6A0jCz_3VaANuFMLpc
+- https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/
+
 Kubernete is used to orchestrate docker containers which means management of containers.
 
 What Docker not provide that Kubernetes does?
@@ -25,7 +28,7 @@ Docker vs Kubernetes (Architecture)
     container, we need Java Runtime and similarly, to run container in Docker, we have Dockershim as container runtime
     and in Kubernetes, we have multiple options for pod runtime like containerd, container runtime etc.
 
-- In Kubernetes master node (Control Plane), there are 3 components. 
+- In Kubernetes master node (Control Plane), there are 5 components. 
     1- API Server
     2- Scheduler
     3- etcd
@@ -51,3 +54,75 @@ and then schedule pod on that worker node.
     on cloud services like EKS or AKS. If we are running Kubernetes cluster on-premises, this component is 
     not at all needed.
 
+
+- If multiple containers are deployed in the same pod in kubernetes, then containers get
+    - shared network
+    - shared storage
+It means containers can access to each other via localhost:port and can share files as well. However, its not a good practice
+to put multiple containers in a single pod as we can use sidecar containers for this purpose as well.
+
+- minikube cluster commands,
+    - minikube start
+    - minikube ssh
+    - minikube stop
+
+- clusterIP address is assigned to every pod in the cluster.
+
+- Some kubernetes common commands,
+    - kubectl create -f simple_pod.yaml
+    - kubectl apply -f simple_pod.yaml
+    - kubectl get pods
+    - kubectl get pods -o wide
+    - kubectl get pods -w  (watching what actions like create, delete are being performed on pod)
+    - kubectl get deploy
+    - kubectl get rs
+    - kubectl delete pod <pod-name>
+    - kubectl logs <pod-name>
+    - kubectl describe pod <pod-name>
+    - kubectl get all
+    - kubectl exec -it <pod-name> -- sh
+
+
+Container vs Pod vs Deployment 
+
+- Container: A container is a lightweight, standalone, executable software package that includes everything needed to run an application: code, runtime, system tools, libraries, and settings. In Kubernetes, containers are used to encapsulate and deploy applications, providing consistency and portability across different environments.
+
+- Pod: A pod is the smallest deployable unit in Kubernetes, representing one or more containers that are tightly coupled and share the same network namespace, IPC namespace, and storage. Pods are used to deploy and scale applications, and they encapsulate the application's containers along with shared resources and configuration.
+
+- Deployment: A deployment is a Kubernetes resource that manages the lifecycle of replicated pods. It defines a desired state for the application, including the number of replicas (pods) to run, the container image to use, and the update strategy. Deployments ensure that the specified number of pods are running and handle updates, rollbacks, and scaling of the application. They provide declarative, self-healing capabilities for managing application deployments in Kubernetes.
+    - A `Controller` is a kubernetes resource that tracks the state of some kubernetes object like pod. It ensures that the actual state match to the desired state. `ReplicaSet Controller` is an example of controller which ensures the desired no of pods are always running. Deployment object interacts with the ReplicaSet.
+
+
+- Service: In Kubernetes, a service is an abstraction that defines a logical set of pods and a policy by which to access them. 
+Key characteristics of Kubernetes services include:
+
+    - Stable Endpoint: A service exposes a stable IP address and port that can be used to access the pods it selects. This endpoint remains consistent even as pods are created, deleted, or replaced.
+
+    - Load Balancing: Services distribute client requests among the pods that are targeted by the service. This load balancing helps distribute traffic evenly across the available pods, improving reliability and scalability.
+
+    - Service Discovery Process: Services provide a way for other components within the Kubernetes cluster to 
+    discover and communicate with pods. Clients can simply connect to the service's endpoint without needing to 
+    know the specific IP addresses of individual pods.
+
+    - Selectors: Services use labels and selectors to determine which pods to target. Pods that match the selector defined by a service are automatically included in the set of endpoints managed by the service.
+
+    - Types: Kubernetes supports different types of services to accommodate various use cases:
+
+        - ClusterIP: Exposes the service internally within the cluster. This is the default service type. (If you create servie of this type, only those who can login to Kubernetes cluster can access this service)
+        - NodePort: Exposes the service on a specific port on each node in the cluster. The service is accessible externally using any node's IP address and the specified port. (Let's say Kubernetes cluster is on AWS EC2 instances and If you create service of this type, anyone who has access to ec2 instances can access the service)
+        - LoadBalancer: Exposes the service using a cloud provider's load balancer. The load balancer distributes incoming traffic to the service among its pods. (If you create servie of this type, anyone in the world can access this service)
+        - ExternalName: Maps the service to a DNS name outside the cluster.
+
+
+flame:
+    image: pawelmalak/flame:latest
+    container_name: flame
+    restart: unless-stopped
+    networks:
+      - net
+    volumes:
+      - ./flame:/app/data
+    ports:
+      - "5005:5005"
+    environment:
+      - PASSWORD=123456Eg
