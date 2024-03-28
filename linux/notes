@@ -1,0 +1,23 @@
+Linux Commands,
+
+- man ls  (search manual page for 'ls' command)
+- date
+- date | echo "today is"   (will not print date as date command does not produce to stdin channel)
+- ps -ef (processes)
+- free -g (memory usage)
+- df -h (storage usage)
+- nproc  (no of processes)
+- top   (all resources info like window taskbar)
+- ps -ef | grep python  (search python in processes)
+- ps -ef | grep python | aws -F " " '{print $2}'   (get all python process ids)
+- curl url | grep ERROR (get page content and search error)
+- wget url  (this will donwload the file into the system in contrast to curl which only get page content)
+- sudo find / -name <file-name>  (search file in the whole system)
+- which python3   (get python3 path)
+- trap 'command' SIGINT   (trap the Ctrl^C signal and perform some action via command/function)
+
+
+shell script specific commands,
+- set -x # debug mode
+- set -e # exit the script when there is an error (does not handle pipe error so explicitly handle it)
+- set -o pipefail # (exit script when there is a pipe error)
