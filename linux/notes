@@ -21,3 +21,58 @@ shell script specific commands,
 - set -x # debug mode
 - set -e # exit the script when there is an error (does not handle pipe error so explicitly handle it)
 - set -o pipefail # (exit script when there is a pipe error)
+
+
+Interview Questions
+
+1- list commonly use shell commands
+  - ls
+  - cp
+  - top
+  - ps -ef
+  - df
+  - free
+  - mv
+  - mkdir
+  - touch
+  - vim
+  - grep
+
+2- Shell script to list all processes
+  - ps -ef 
+  - ps -ef | grep <process-name> | awk -F " " '{print $2}'
+
+3- Script to Print only errors from a remote log (e.g. google storage/ aws s3 bucket)
+  - curl <google-storage-url / s3-bucket-url> | grep ERROR
+
+4- Shell script to print numbers divisible by 3 and 5 but not 15
+  - print_numbers.sh
+
+5- Script to print number of "S" in mississippi
+  - print_char.sh
+
+6- how will you debug the shell script
+  - set -x
+
+7- what is crontab in linux? Can you provide an example of usage?
+  - Schedule the execution of a job. For exmaple, schedule a shell script to execute at 6pm daily 
+    and generate report and send on email.
+
+8- How to open a file in read-only mode?
+  - vim -r file.txt
+
+9- What is difference between soft and hard link?
+  - A soft link is a pointer to another file or directory by its path name.
+  - It is a separate file that contains the path of the target file or directory.
+  - If the target file or directory is deleted or moved, the soft link becomes broken (dangling) and points to nothing.
+  - For example, I have a `myfile` in path `/home/user/folder1/folder2/folder3/myfile` and now
+    inside another folder `/tmp`, I create a soft link to this file as,
+      - ln -s /home/user/folder1/folder2/folder3/myfile soft_myfile  
+    and now if I do `cat soft_myfile` from `/tmp` folder, I will be able to see the content of `myfile`
+  - Also, if you do any changes in `soft_myfile`, it will be reflected in original/target file `myfile` as well.
+
+  - A hard link is very similar to soft link but in hard link, a shared copy will be created which means any changes in 
+    the content of either hard link file or target file will be reflected in both files. 
+  - Also, if you remove target/original file, hard link file will not be removed and you can still access it.
+
+  
