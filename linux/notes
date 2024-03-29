@@ -10,6 +10,8 @@ Linux Commands,
 - top   (all resources info like window taskbar)
 - ps -ef | grep python  (search python in processes)
 - ps -ef | grep python | aws -F " " '{print $2}'   (get all python process ids)
+- kill -9 <process-id>  (kill a process using pid)
+- kill -SIGKILL <process-id>  (kill a process using pid)
 - curl url | grep ERROR (get page content and search error)
 - wget url  (this will donwload the file into the system in contrast to curl which only get page content)
 - sudo find / -name <file-name>  (search file in the whole system)
@@ -75,4 +77,21 @@ Interview Questions
     the content of either hard link file or target file will be reflected in both files. 
   - Also, if you remove target/original file, hard link file will not be removed and you can still access it.
 
-  
+10- What is difference between break and continue statements?
+  - break a loop on certain condition
+  - skip some part of the loop and continue the loop on certain condition
+
+11- Is bash dynamic or statically typed language?
+  - Bash is dynamically typed language similar to python because we don't explicitly specify 
+    the data types and it infers dynamically at run time.
+
+12- Network troubleshooting utility?
+  - traceroute <url-name/ip-address>
+  - traceroute google.com
+
+13- How will you manage logs of a system that generate hugs log files everyday?
+  - Managing logs for a system that generates large log files every day in Linux involves several steps to ensure 
+    efficient storage, retrieval, and analysis of logs
+  - Use the logrotate utility, which is a standard tool for managing log files in Linux. logrotate can 
+    automatically rotate, compress, and archive log files based on criteria such as size, age, or specific schedules.
+
