@@ -1,9 +1,27 @@
 
 - git remote -v     (get remote url of git repo)
 - git log <branch-name>     (get logs of a branch)
+- git log --oneline
 - git checkout -b <branch-name>     (create and checkout to new branc)
 - git reset --HARD <commit-id>      (reset the current branch to the specified commit)
-- git cherry-pick <commit-id>       (add changes upto the specified commit to the current branch)
+- git cherry-pick <commit-id>       (add changes from the specified commit to the current branch)
+
+- git merge <branch-name>       
+    (merge the changes from the branch-name to the current branch, creating a new merge commit. 
+    Preserves the commit history of both branches.)
+
+- git rebase <base-branch>
+    (Moves the entire branch to a new base commit, replaying each commit on top of the new base.
+    Results in a linear commit history without merge commits.)
+    For example, if you have the following branches:
+        main (the main branch)
+        feature-branch (your feature branch)
+    And you're currently on feature-branch and want to rebase it onto main, you would execute:
+    - git checkout feature-branch
+    - git rebase main
+
+- git merge --squash <feature-branch>
+    (Merge the changes from feature-branch to your current branch. Combines multiple commits into a single commit, effectively condensing the commit history. Useful for creating concise, high-level commits that summarize the changes.)
 
 
 - Git Fork vs Git Clone
