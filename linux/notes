@@ -1,5 +1,13 @@
 Linux Commands,
 
+- pwd
+- cd ..
+- cd - 
+- zip <zip-filename.zip> [file1 | file2 | ...]
+- zip -r <zip-dirname.zip> <dirname>
+- unzip <zip-filename.zip>
+- cp /path/to/source /path/to/target
+- mv  (move or rename files)
 - man ls  (search manual page for 'ls' command)
 - date
 - date | echo "today is"   (will not print date as date command does not produce to stdin channel)

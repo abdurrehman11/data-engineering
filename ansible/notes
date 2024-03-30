@@ -1,0 +1,22 @@
+
+- https://docs.ansible.com/ansible/latest/getting_started/get_started_playbook.html
+
+- create 2 ec2 instances and enable ssh via pubic private key.
+- install ansible in instance_1 as,
+  - sudo apt update
+  - sudo apt install ansible
+  - ansible --version
+
+- create pub/private key pair on ec2 instance_1 using `ssh-keygen` and do the same on ec2 instance_2 as well.
+- copy the public key from ec2 instance_1 and paste it in `authorized_keys` in ec2 instance_2 to 
+  enable ssh instance_2 from instance_1.
+- create an `inventory` file in instance_1 and place the private IP address of instance_2 in this file
+  and run the following command from instance_1,
+  - ansible -i inventory all -m "shell" -a "touch devopsclass"  (this command is used to run adhoc commands)
+
+- Now verify the same file `devopsclass` on instance_2 and if successful, ansible is working!
+
+- To run the playbook, use the following command,
+  - ansible-playbook -i inventory my_playbook.yaml
+  - ansible-playbook -vvv -i inventory my_playbook.yaml   (run the playbook with highest verbosity level)
+
