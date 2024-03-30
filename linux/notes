@@ -23,7 +23,7 @@ Linux Commands,
 - curl url | grep ERROR (get page content and search error)
 - wget url  (this will donwload the file into the system in contrast to curl which only get page content)
 - sudo find / -name <file-name>  (search file in the whole system)
-- which python3   (get python3 path)
+- which <executable-name>   (get path of an executable file or script, e.g. python3)
 - trap 'command' SIGINT   (trap the Ctrl^C signal and perform some action via command/function)
 
 
