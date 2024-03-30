@@ -1,0 +1,12 @@
+
+- git remote -v     (get remote url of git repo)
+- git log <branch-name>     (get logs of a branch)
+- git checkout -b <branch-name>     (create and checkout to new branc)
+- git reset --HARD <commit-id>      (reset the current branch to the specified commit)
+- git cherry-pick <commit-id>       (add changes upto the specified commit to the current branch)
+
+
+- Git Fork vs Git Clone
+    - Git Fork creates a copy of the repository under you github account/organization and give you flexiblity to do changes in this project/repo and continue it as independent project.
+    - Git clone donwload the copy of the original repository and then you can contributes any changes to this repo by creating PR and merge them in main branch via approval process.
+
