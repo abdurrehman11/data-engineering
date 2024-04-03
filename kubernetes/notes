@@ -79,9 +79,23 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - kubectl get rs
     - kubectl delete pod <pod-name>
     - kubectl logs <pod-name>
+    - kubectl logs <pod-name> -c <container-name>
     - kubectl describe pod <pod-name>
     - kubectl get all
     - kubectl exec -it <pod-name> -- sh
+    - kubectl get events
+
+
+- Some helm commands,
+    - helm repo add <repo-name>
+    - help repo list
+    - helm search repo <repo-name>
+    - helm ls
+    - helm pull <repo-name/chart-name>
+    - helm pull nicholaswilde/etherpad --untar=true
+    - helm install <release-name/chart-name> <helm-chart-path>
+    - helm install etherpad ./etherpad
+    - helm uninstall <release-name/chart-name>
 
 
 Container vs Pod vs Deployment 
