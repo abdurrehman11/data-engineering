@@ -1,5 +1,6 @@
 Linux Commands,
 
+- Copy/Paste (Outside of insert mode I typed the :set paste command, hit enter, then command+v (I'm on a mac) to paste)
 - pwd
 - cd ..
 - cd - 
@@ -23,8 +24,20 @@ Linux Commands,
 - curl url | grep ERROR (get page content and search error)
 - wget url  (this will donwload the file into the system in contrast to curl which only get page content)
 - sudo find / -name <file-name>  (search file in the whole system)
+- find . -name "filename_or_directory"
 - which <executable-name>   (get path of an executable file or script, e.g. python3)
 - trap 'command' SIGINT   (trap the Ctrl^C signal and perform some action via command/function)
+- cat /etc/passwd   (see all users in linux system)
+- uname -m    (display the machine hardware name/ architecture of the system)
+- lsb_release -a    (display distribution / os_family of linux)
+- cat /etc/*-release    (get detailed display distribution / os_family of linux)
+- grep -c '^processor' /proc/cpuinfo | nproc    (to get no of cpu cores)
+- free -h | awk '/^Mem/ {print $2}'   (get memeory size of linux server)
+- du -h <file-name>   (check size of file using file name)
+- nc -z example.com 80  ( can be used for port scanning (nc -z), transferring files, port listening, and as a simple      
+                          network pipe.)
+- nslookup example.com  (Perform a DNS lookup to resolve a domain name to an IP address)
+- telnet example.com 80 (Connect to a remote host on a specific port:)
 
 
 shell script specific commands,

@@ -72,6 +72,7 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - kubectl create -f simple_pod.yaml
     - kubectl apply -f simple_pod.yaml
     - kubectl get pods
+    - kubectl get pod <pod-name> -v=9      (get pod with highest level of verbosity)
     - kubectl get pods -o wide
     - kubectl get pods -w  (watching what actions like create, delete are being performed on pod)
     - kubectl get deploy
