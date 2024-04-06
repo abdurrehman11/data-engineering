@@ -93,10 +93,27 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - helm ls
     - helm pull <repo-name/chart-name>
     - helm pull nicholaswilde/etherpad --untar=true
-    - helm install <release-name/chart-name> <helm-chart-path>
-    - helm install etherpad ./etherpad
-    - helm uninstall <release-name/chart-name>
 
+    - helm create <chart-name>
+    - helm create helloworld
+    - helm install <release-name/chart-name> <helm-chart-dir-path>
+    - helm install myhelloworld ./helloworld/
+    - helm upgrade <release-name/chart-name> <helm-chart-dir-path>
+    - helm upgrade myhelloworld ./helloworld/
+    - helm rollback <release-name/chart-name> <revision-no>
+    - helm rollback myhelloworld 1
+    - helm install <release-name/chart-name> --debug --dry-run <helm-chart-dir-path>
+    - helm install myhelloworld --debug --dry-run ./helloworld/
+    - helm template <helm-chart-dir-path>
+    - helm template ./helloworld
+    - helm lint <helm-chart-dir-path>
+    - helm lint ./helloworld
+    - helm uninstall <release-name/chart-name>  (update the chart revision)
+    - helm uninstall myhelloworld
+
+- helm repo add fluxcd-community https://fluxcd-community.github.io/helm-charts
+- helm install my-flux2 fluxcd-community/flux2 --version 2.12.4
+- helm install my-penpot rock8s/penpot --version 1.0.10
 
 Container vs Pod vs Deployment 
 
