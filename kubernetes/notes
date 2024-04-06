@@ -86,7 +86,9 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - kubectl get events
 
 
-- Some helm commands,
+- Some Helm commands,
+    - https://jhooq.com/helmfile-manage-helmchart/
+
     - helm repo add <repo-name>
     - help repo list
     - helm search repo <repo-name>
@@ -110,6 +112,13 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - helm lint ./helloworld
     - helm uninstall <release-name/chart-name>  (update the chart revision)
     - helm uninstall myhelloworld
+    - helm search hub <chart-name>
+    - helm search hub <chart-name> --max-col-width=0
+    - helm search hub penpot --max-col-width=0
+    - helm search repo penpot --versions
+    - helm show readme rock8s/penpot --version 1.0.10
+    
+    - helmfile sync 
 
 - helm repo add fluxcd-community https://fluxcd-community.github.io/helm-charts
 - helm install my-flux2 fluxcd-community/flux2 --version 2.12.4
