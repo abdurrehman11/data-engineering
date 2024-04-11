@@ -105,6 +105,7 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - helm rollback <release-name/chart-name> <revision-no>
     - helm rollback myhelloworld 1
     - helm install <release-name/chart-name> --debug --dry-run <helm-chart-dir-path>
+    - helm install <release-name/chart-name> --debug --dry-run --generate-name
     - helm install myhelloworld --debug --dry-run ./helloworld/
     - helm template <helm-chart-dir-path>
     - helm template ./helloworld
@@ -118,7 +119,12 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - helm search repo penpot --versions
     - helm show readme rock8s/penpot --version 1.0.10
     
-    - helmfile sync 
+    - helmfile sync
+    - helmfile --selector naem=wireguard sync   (running a specific release from helmfile)
+    - helmfile --selector name=wireguard -f helmfile.yaml sync --skip-deps  
+        (running specific release and skipping all chart dependencies/repos get and update)
+    - helmfile destroy
+    - helmfile --selector name=<release-name> destroy --skip-deps
 
 - helm repo add fluxcd-community https://fluxcd-community.github.io/helm-charts
 - helm install my-flux2 fluxcd-community/flux2 --version 2.12.4

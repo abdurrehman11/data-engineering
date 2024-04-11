@@ -1,6 +1,12 @@
 Linux Commands,
 
 - Copy/Paste (Outside of insert mode I typed the :set paste command, hit enter, then command+v (I'm on a mac) to paste)
+- comment -> Press Esc, Ctrl + V (Visual Mode), press the down arrow key to select lines, press shift + I, type the # key,
+              press Esc
+- uncomment -> Press Esc, Ctrl + V (Visual Mode), press the down arrow key to select lines, press x
+- copy -> Press Esc, Shift + V (Visual Mode), press the down arrow key to select lines, press y
+- paste -> Go to selected line, press p
+
 - pwd
 - cd ..
 - cd - 
