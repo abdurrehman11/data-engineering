@@ -100,6 +100,7 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - helm create helloworld
     - helm install <release-name/chart-name> <helm-chart-dir-path>
     - helm install myhelloworld ./helloworld/
+    - helm dep up ./penpot/     (update chart dependencies in case of dependency/subcharts)
     - helm upgrade <release-name/chart-name> <helm-chart-dir-path>
     - helm upgrade myhelloworld ./helloworld/
     - helm rollback <release-name/chart-name> <revision-no>
