@@ -44,6 +44,7 @@ Linux Commands,
                           network pipe.)
 - nslookup example.com  (Perform a DNS lookup to resolve a domain name to an IP address)
 - telnet example.com 80 (Connect to a remote host on a specific port)
+- lsof -i :5005   (find the process that is using port 5005)
 
 
 shell script specific commands,

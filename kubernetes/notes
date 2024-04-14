@@ -84,6 +84,8 @@ to put multiple containers in a single pod as we can use sidecar containers for 
     - kubectl get all
     - kubectl exec -it <pod-name> -- sh
     - kubectl get events
+    - kubectl port-forward <pod-name> <local-port>:<pod-port>
+    - kubectl port-forward service/<service-name> <local-port>:<service-port>
 
 
 - Some Helm commands,
